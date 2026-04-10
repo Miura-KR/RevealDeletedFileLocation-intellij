@@ -34,7 +34,7 @@
                 class="com.k.pmpstudy.RevealDeletedFileLocationAction"
                 text="Reveal Deleted File Location"
                 description="Focuses the directory where the deleted file was located in the Project view.">
-            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
+            <add-to-group group-id="ChangesViewPopupMenu" anchor="after" relative-to-action="ChangesView.EditSource"/>
         </action>
     </actions>
 
