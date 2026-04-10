@@ -30,4 +30,13 @@
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
     </extensions>
 
+    <actions>
+        <action id="com.k-pmpstudy.OpenRemovedDirectory.OpenRemovedDirectoryAction"
+                class="com.k.pmpstudy.OpenRemovedDirectoryAction"
+                text="ディレクトリを開く"
+                description="削除されたファイルがあったディレクトリを「プロジェクト」ペインでフォーカスします">
+            <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+
 </idea-plugin>
