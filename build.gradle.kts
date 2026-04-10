@@ -5,11 +5,11 @@ plugins {
 }
 
 group = "com.k.pmpstudy"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 // Set the JVM language level used to build the project.
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 repositories {
@@ -38,6 +38,7 @@ intellijPlatform {
         }
 
         changeNotes = """
+            v1.0.0<br>
             Initial version
         """.trimIndent()
     }
