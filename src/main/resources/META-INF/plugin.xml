@@ -8,14 +8,15 @@
     <name>Reveal Deleted File Location</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://www.yourcompany.com">RevealDeletedFileLocation</vendor>
+    <vendor url="https://github.com/Miura-KR/RevealDeletedFileLocation-intellij">RevealDeletedFileLocation</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Adds a "Reveal Deleted File Location" action to the Commit tool window context menu for deleted files,
+        Adds a "Reveal Deleted File Location" action to the Commit tool window context menu for deleted files,<br>
         which focuses the directory where the deleted file was located in the Project view.
 
+<br>
 <br>
 <hr>
 
