@@ -1,118 +1,83 @@
-# IntelliJ Platform Plugin Template
+# OpenRemovedDirectory-intellij
 
-[![Twitter Follow](https://img.shields.io/badge/follow-%40JBPlatform-1DA1F2?logo=twitter)](https://twitter.com/JBPlatform)
-[![Developers Forum](https://img.shields.io/badge/JetBrains%20Platform-Join-blue)][jb:forum]
+An IntelliJ Platform plugin that adds an **Open Directory In Project View** action to the Commit tool window context menu for deleted files.
 
-## Plugin template structure
+When invoked on a deleted file, the action focuses the directory where the file was located in the Project view. If that directory itself has also been removed, the plugin walks up to the nearest existing ancestor directory.
 
-A generated project contains the following content structure:
+## Usage
+
+1. Open the **Commit** tool window (the tool window that lists local changes before committing).
+2. Right-click on a deleted file entry.
+3. Choose **Open Directory In Project View** from the context menu.
+4. The Project view opens (if it was closed) and the directory that used to contain the file is selected and focused.
+
+The action only appears when a single deleted change is selected. It is hidden for added / modified files and for multi-selections.
+
+## Building
+
+This project uses the [IntelliJ Platform Gradle Plugin](https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html).
 
 ```
-.
-├── .run/                   Predefined Run/Debug Configurations
-├── build/                  Output build directory
-├── gradle
-│   ├── wrapper/            Gradle Wrapper
-│   ├── libs.versions.toml  Version catalog
-├── src                     Plugin sources
-│   ├── main
-│   │   ├── kotlin/         Kotlin production sources
-│   │   └── resources/      Resources - plugin.xml, icons, messages
-├── .gitignore              Git ignoring rules
-├── build.gradle.kts        Gradle build configuration
-├── gradle.properties       Gradle configuration properties
-├── gradlew                 *nix Gradle Wrapper script
-├── gradlew.bat             Windows Gradle Wrapper script
-├── README.md               README
-└── settings.gradle.kts     Gradle project settings
+./gradlew buildPlugin     # builds the distributable zip under build/distributions
+./gradlew runIde          # launches a sandbox IDE with the plugin installed
+./gradlew verifyPlugin    # runs the Plugin Verifier against the target IDE
 ```
 
-In addition to the configuration files, the most crucial part is the `src` directory, which contains our implementation
-and the manifest for our plugin – [plugin.xml][file:plugin.xml].
+Build settings live in `gradle.properties`:
 
-> [!NOTE]
-> To use Java in your plugin, create the `/src/main/java` directory.
+| Property          | Purpose                                      |
+|-------------------|----------------------------------------------|
+| `platformVersion` | Target IntelliJ Platform version             |
+| `pluginSinceBuild`| Minimum supported IDE build number           |
 
-## Plugin configuration file
+## Project layout
 
-The plugin configuration file is a [plugin.xml][file:plugin.xml] file located in the `src/main/resources/META-INF`
-directory.
-It provides general information about the plugin, its dependencies, extensions, and listeners.
+```
+src/main/kotlin/com/k/pmpstudy/
+    OpenRemovedDirectoryAction.kt   Action implementation
+src/main/resources/META-INF/
+    plugin.xml                      Plugin descriptor / action registration
+```
 
-You can read more about this file in the [Plugin Configuration File][docs:plugin.xml] section of our documentation.
+---
 
-If you're still not quite sure what this is all about, read our
-introduction: [What is the IntelliJ Platform?][docs:intro]
+# OpenRemovedDirectory-intelliJ (日本語)
 
-$H$H Predefined Run/Debug configurations
+IntelliJ の「コミット」ツールウィンドウで、削除されたファイルを右クリックしたときのコンテキストメニューに **Open Directory In Project View** を追加するプラグインです。
 
-Within the default project structure, there is a `.run` directory provided containing predefined *Run/Debug
-configurations* that expose corresponding Gradle tasks:
+このメニューを実行すると、削除されたファイルが元々存在していたディレクトリを「プロジェクト」ビューでフォーカスします。ディレクトリ自体も削除されていた場合は、存在している最も近い祖先ディレクトリまで遡ってフォーカスします。
 
-| Configuration name | Description                                                                                                                                                                         |
-|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Run Plugin         | Runs [`:runIde`][gh:intellij-platform-gradle-plugin-runIde] IntelliJ Platform Gradle Plugin task. Use the *Debug* icon for plugin debugging.                                        |
-| Run Tests          | Runs [`:test`][gradle:lifecycle-tasks] Gradle task.                                                                                                                                 |
-| Run Verifications  | Runs [`:verifyPlugin`][gh:intellij-platform-gradle-plugin-verifyPlugin] IntelliJ Platform Gradle Plugin task to check the plugin compatibility against the specified IntelliJ IDEs. |
+## 使い方
 
-> [!NOTE]
-> You can find the logs from the running task in the `idea.log` tab.
+1. 「コミット」ツールウィンドウを開きます。
+2. 削除されたファイルの行を右クリックします。
+3. コンテキストメニューから **Open Directory In Project View** を選択します。
+4. 「プロジェクト」ビューが(閉じていた場合は)開き、元のディレクトリが選択・フォーカスされます。
 
-## Publishing the plugin
+削除された Change が 1 件だけ選ばれているときのみメニューに表示されます。追加 / 変更ファイルや複数選択時には表示されません。
 
-> [!TIP]
-> Make sure to follow all guidelines listed in [Publishing a Plugin][docs:publishing] to follow all recommended and
-> required steps.
+## ビルド
 
-Releasing a plugin to [JetBrains Marketplace](https://plugins.jetbrains.com) is a straightforward operation that uses
-the `publishPlugin` Gradle task provided by
-the [intellij-platform-gradle-plugin][gh:intellij-platform-gradle-plugin-docs].
+[IntelliJ Platform Gradle Plugin](https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html) を使用しています。
 
-You can also upload the plugin to the [JetBrains Plugin Repository](https://plugins.jetbrains.com/plugin/upload)
-manually via UI.
+```
+./gradlew buildPlugin     # build/distributions に配布用 zip を生成
+./gradlew runIde          # プラグインを入れたサンドボックス IDE を起動
+./gradlew verifyPlugin    # Plugin Verifier で互換性チェック
+```
 
-## Useful links
+ビルド設定は `gradle.properties` にあります。
 
-- [IntelliJ Platform SDK Plugin SDK][docs]
-- [IntelliJ Platform Gradle Plugin Documentation][gh:intellij-platform-gradle-plugin-docs]
-- [IntelliJ Platform Explorer][jb:ipe]
-- [JetBrains Marketplace Quality Guidelines][jb:quality-guidelines]
-- [IntelliJ Platform UI Guidelines][jb:ui-guidelines]
-- [JetBrains Marketplace Paid Plugins][jb:paid-plugins]
-- [IntelliJ SDK Code Samples][gh:code-samples]
+| プロパティ         | 用途                                    |
+|-------------------|-----------------------------------------|
+| `platformVersion` | ターゲットとなる IntelliJ Platform のバージョン |
+| `pluginSinceBuild`| サポートする IDE の最小ビルド番号          |
 
-[docs]: https://plugins.jetbrains.com/docs/intellij
+## ディレクトリ構成
 
-[docs:intro]: https://plugins.jetbrains.com/docs/intellij/intellij-platform.html?from=IJPluginTemplate
-
-[docs:plugin.xml]: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html?from=IJPluginTemplate
-
-[docs:publishing]: https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate
-
-[file:plugin.xml]: ./src/main/resources/META-INF/plugin.xml
-
-[gh:code-samples]: https://github.com/JetBrains/intellij-sdk-code-samples
-
-[gh:intellij-platform-gradle-plugin]: https://github.com/JetBrains/intellij-platform-gradle-plugin
-
-[gh:intellij-platform-gradle-plugin-docs]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
-
-[gh:intellij-platform-gradle-plugin-runIde]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#runIde
-
-[gh:intellij-platform-gradle-plugin-verifyPlugin]: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-tasks.html#verifyPlugin
-
-[gradle:lifecycle-tasks]: https://docs.gradle.org/current/userguide/java_plugin.html#lifecycle_tasks
-
-[jb:github]: https://github.com/JetBrains/.github/blob/main/profile/README.md
-
-[jb:forum]: https://platform.jetbrains.com/
-
-[jb:quality-guidelines]: https://plugins.jetbrains.com/docs/marketplace/quality-guidelines.html
-
-[jb:paid-plugins]: https://plugins.jetbrains.com/docs/marketplace/paid-plugins-marketplace.html
-
-[jb:quality-guidelines]: https://plugins.jetbrains.com/docs/marketplace/quality-guidelines.html
-
-[jb:ipe]: https://jb.gg/ipe
-
-[jb:ui-guidelines]: https://jetbrains.github.io/ui
+```
+src/main/kotlin/com/k/pmpstudy/
+    OpenRemovedDirectoryAction.kt   アクションの実装
+src/main/resources/META-INF/
+    plugin.xml                      プラグイン定義 / アクション登録
+```
