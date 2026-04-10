@@ -1,26 +1,26 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>com.k.pmpstudy.OpenRemovedDirectory</id>
+    <id>com.k.pmpstudy.revealdeletedfilelocation</id>
 
     <!-- Public plugin name should be written in Title Case.
      Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>Open Removed Directory</name>
+    <name>Reveal Deleted File Location</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://www.yourcompany.com">OpenRemovedDirectory</vendor>
+    <vendor url="https://www.yourcompany.com">RevealDeletedFileLocation</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Adds an "Open Directory In Project View" action to the Commit tool window context menu for deleted files,
+        Adds a "Reveal Deleted File Location" action to the Commit tool window context menu for deleted files,
         which focuses the directory where the deleted file was located in the Project view.
 
 <br>
 <hr>
 
         「コミット」ツールウィンドウで削除されたファイルを右クリックしたときに、
-        「Open Directory In Project View」メニューを追加します。<br>
+        「Reveal Deleted File Location」メニューを追加します。<br>
         このメニューを実行すると、削除されたファイルが元々存在していたディレクトリを
         「プロジェクト」ビューでフォーカスします。
         ]]></description>
@@ -35,9 +35,9 @@
     <depends>com.intellij.modules.platform</depends>
 
     <actions>
-        <action id="com.k-pmpstudy.OpenRemovedDirectory.OpenRemovedDirectoryAction"
-                class="com.k.pmpstudy.OpenRemovedDirectoryAction"
-                text="Open Direcotry In Project View"
+        <action id="com.k.pmpstudy.RevealDeletedFileLocationAction"
+                class="com.k.pmpstudy.RevealDeletedFileLocationAction"
+                text="Reveal Deleted File Location"
                 description="Focuses the directory where the deleted file was located in the Project view.">
             <add-to-group group-id="ChangesViewPopupMenu" anchor="last"/>
         </action>

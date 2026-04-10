@@ -1,1 +1,1 @@
-rootProject.name = "OpenRemovedDirectory"
+rootProject.name = "RevealDeletedFileLocation"

@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.intellijPlatform)
 }
 
-group = "com.k-pmpstudy"
+group = "com.k.pmpstudy"
 version = "1.0.0-SNAPSHOT"
 
 // Set the JVM language level used to build the project.

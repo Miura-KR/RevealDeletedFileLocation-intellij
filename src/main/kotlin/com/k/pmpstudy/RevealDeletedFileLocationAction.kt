@@ -12,14 +12,14 @@ import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 
 /**
- * 「コミット」ペインで削除されたファイルを右クリックしたときに表示される
- * 「ディレクトリを開く」アクション。
+ * 「コミット」ツールウィンドウで削除されたファイルを右クリックしたときに表示される
+ * 「Reveal Deleted File Location」アクション。
  *
- * 削除されたファイルが元々存在していたディレクトリを、「プロジェクト」ペインで
+ * 削除されたファイルが元々存在していたディレクトリを「プロジェクト」ビューで
  * フォーカスする。元のディレクトリ自体も削除されている場合は、存在している
  * 最も近い祖先ディレクトリまで遡ってフォーカスする。
  */
-class OpenRemovedDirectoryAction : AnAction() {
+class RevealDeletedFileLocationAction : AnAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
