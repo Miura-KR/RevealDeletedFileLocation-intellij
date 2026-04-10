@@ -8,6 +8,8 @@ import com.intellij.openapi.vcs.FilePath
 import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.ToolWindowId
+import com.intellij.openapi.wm.ToolWindowManager
 
 /**
  * 「コミット」ペインで削除されたファイルを右クリックしたときに表示される
@@ -31,7 +33,17 @@ class OpenRemovedDirectoryAction : AnAction() {
         val deletedFilePath = change.beforeRevision?.file ?: return
 
         val targetDir = findNearestExistingDirectory(deletedFilePath.parentPath) ?: return
-        ProjectView.getInstance(project).select(null, targetDir, true)
+
+        // 「プロジェクト」ツールウィンドウが閉じている場合でも開いて選択できるように、
+        // まずツールウィンドウを activate してから select を呼ぶ。
+        val projectToolWindow = ToolWindowManager.getInstance(project).getToolWindow(ToolWindowId.PROJECT_VIEW)
+        if (projectToolWindow != null) {
+            projectToolWindow.activate({
+                ProjectView.getInstance(project).select(null, targetDir, true)
+            }, true)
+        } else {
+            ProjectView.getInstance(project).select(null, targetDir, true)
+        }
     }
 
     /**
