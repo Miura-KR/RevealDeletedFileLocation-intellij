@@ -36,6 +36,7 @@
                 text="Reveal Deleted File Location"
                 description="Focuses the directory where the deleted file was located in the Project view.">
             <add-to-group group-id="ChangesViewPopupMenu" anchor="after" relative-to-action="ChangesView.EditSource"/>
+            <add-to-group group-id="Vcs.RepositoryChangesBrowserMenu" anchor="after" relative-to-action="Vcs.OpenRepositoryVersion"/>
         </action>
     </actions>
 
