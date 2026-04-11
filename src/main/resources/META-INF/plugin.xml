@@ -13,17 +13,30 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Adds a "Reveal Deleted File Location" action to the Commit tool window context menu for deleted files,<br>
-        which focuses the directory where the deleted file was located in the Project view.
+        Adds context menu actions to the <b>Commit</b> tool window and the <b>Git</b> tool window's
+        per-commit changed files list, for files that were deleted or moved:<br>
+        <ul>
+          <li><b>Reveal Deleted File Location</b> — shown on a deleted file. Focuses the directory
+              where the file used to be in the Project view.</li>
+          <li><b>Reveal Pre-Move Location</b> — shown on a moved / renamed file. Focuses the
+              directory the file was in <i>before</i> the move.</li>
+        </ul>
+        If the target directory itself no longer exists, the plugin walks up to the nearest
+        existing ancestor directory.
 
-<br>
 <br>
 <hr>
 
-        「コミット」ツールウィンドウで削除されたファイルを右クリックしたときに、
-        「Reveal Deleted File Location」メニューを追加します。<br>
-        このメニューを実行すると、削除されたファイルが元々存在していたディレクトリを
-        「プロジェクト」ビューでフォーカスします。
+        「コミット」ツールウィンドウ、および「Git」ツールウィンドウのコミットごとの変更ファイル一覧で、
+        削除 / 移動されたファイルを右クリックしたときに以下のメニューを追加します。<br>
+        <ul>
+          <li><b>Reveal Deleted File Location</b>(削除ファイル向け): 元々存在していたディレクトリを
+              「プロジェクト」ビューでフォーカスします。</li>
+          <li><b>Reveal Pre-Move Location</b>(移動 / リネームされたファイル向け): 移動前に存在していた
+              ディレクトリを「プロジェクト」ビューでフォーカスします。</li>
+        </ul>
+        対象のディレクトリ自体も既に削除されていた場合は、存在している最も近い祖先ディレクトリまで
+        遡ってフォーカスします。
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -34,7 +47,7 @@
         <action id="com.k.pmpstudy.RevealDeletedFileLocationAction"
                 class="com.k.pmpstudy.RevealDeletedFileLocationAction"
                 text="Reveal Deleted File Location"
-                description="Focuses the directory where the deleted file was located in the Project view.">
+                description="Focuses the directory where the selected deleted or moved file used to be located in the Project view.">
             <add-to-group group-id="ChangesViewPopupMenu" anchor="after" relative-to-action="ChangesView.EditSource"/>
             <add-to-group group-id="Vcs.RepositoryChangesBrowserMenu" anchor="after" relative-to-action="Vcs.OpenRepositoryVersion"/>
         </action>

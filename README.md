@@ -1,17 +1,27 @@
 # Reveal Deleted File Location-intellij
 
-An IntelliJ Platform plugin that adds an **Reveal Deleted File Location** action to the Commit tool window context menu for deleted files.
+An IntelliJ Platform plugin that adds context menu actions for navigating to the original location of deleted or moved files.
 
-When invoked on a deleted file, the action focuses the directory where the file was located in the Project view. If that directory itself has also been removed, the plugin walks up to the nearest existing ancestor directory.
+The actions are available in:
+
+- The **Commit** tool window (local changes before committing).
+- The **Git** tool window's per-commit changed files list (the Log tab's file panel).
+
+Depending on the selected change type, the menu entry is:
+
+- **Reveal Deleted File Location** — shown on a deleted file. Focuses the directory where the file used to be in the Project view.
+- **Reveal Pre-Move Location** — shown on a moved / renamed file. Focuses the directory the file was in *before* the move.
+
+If the target directory itself has also been removed, the plugin walks up to the nearest existing ancestor directory.
 
 ## Usage
 
-1. Open the **Commit** tool window (the tool window that lists local changes before committing).
-2. Right-click on a deleted file entry.
-3. Choose **Reveal Deleted File Location** from the context menu.
+1. Open the **Commit** tool window, or the **Git** tool window and select a commit to view its changed files.
+2. Right-click on a deleted or moved file entry.
+3. Choose **Reveal Deleted File Location** (for deleted files) or **Reveal Pre-Move Location** (for moved files) from the context menu.
 4. The Project view opens (if it was closed) and the directory that used to contain the file is selected and focused.
 
-The action only appears when a single deleted change is selected. It is hidden for added / modified files and for multi-selections.
+The action only appears when a single deleted or moved change is selected. It is hidden for added / modified files and for multi-selections.
 
 ## Building
 
@@ -43,18 +53,28 @@ src/main/resources/META-INF/
 
 # Reveal Deleted File Location-intellij (日本語)
 
-IntelliJ の「コミット」ツールウィンドウで、削除されたファイルを右クリックしたときのコンテキストメニューに **Reveal Deleted File Location** を追加するプラグインです。
+IntelliJ で、削除または移動されたファイルが元々存在していたディレクトリを「プロジェクト」ビューでフォーカスするコンテキストメニューを追加するプラグインです。
 
-このメニューを実行すると、削除されたファイルが元々存在していたディレクトリを「プロジェクト」ビューでフォーカスします。ディレクトリ自体も削除されていた場合は、存在している最も近い祖先ディレクトリまで遡ってフォーカスします。
+メニューは以下の場所に表示されます。
+
+- 「コミット」ツールウィンドウ(コミット前のローカル変更一覧)
+- 「Git」ツールウィンドウの Log タブで選択したコミットの変更ファイル一覧
+
+選択した Change の種類によってメニュー名が切り替わります。
+
+- **Reveal Deleted File Location**(削除されたファイル向け): 削除されたファイルが元々存在していたディレクトリをフォーカスします。
+- **Reveal Pre-Move Location**(移動 / リネームされたファイル向け): 移動前に存在していたディレクトリをフォーカスします。
+
+対象のディレクトリ自体も既に削除されていた場合は、存在している最も近い祖先ディレクトリまで遡ってフォーカスします。
 
 ## 使い方
 
-1. 「コミット」ツールウィンドウを開きます。
-2. 削除されたファイルの行を右クリックします。
-3. コンテキストメニューから **Reveal Deleted File Location** を選択します。
+1. 「コミット」ツールウィンドウ、または「Git」ツールウィンドウで任意のコミットを選択して変更ファイル一覧を表示します。
+2. 削除 / 移動されたファイルの行を右クリックします。
+3. コンテキストメニューから、削除なら **Reveal Deleted File Location** を、移動なら **Reveal Pre-Move Location** を選択します。
 4. 「プロジェクト」ビューが(閉じていた場合は)開き、元のディレクトリが選択・フォーカスされます。
 
-削除された Change が 1 件だけ選ばれているときのみメニューに表示されます。追加 / 変更ファイルや複数選択時には表示されません。
+削除または移動された Change が 1 件だけ選ばれているときのみメニューに表示されます。追加 / 変更ファイルや複数選択時には表示されません。
 
 ## ビルド
 

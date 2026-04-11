@@ -12,27 +12,38 @@ import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 
 /**
- * 「コミット」ツールウィンドウで削除されたファイルを右クリックしたときに表示される
- * 「Reveal Deleted File Location」アクション。
+ * 「コミット」ツールウィンドウや Git Log の変更ファイル一覧で、削除または移動された
+ * ファイルを右クリックしたときに表示されるアクション。
  *
- * 削除されたファイルが元々存在していたディレクトリを「プロジェクト」ビューで
- * フォーカスする。元のディレクトリ自体も削除されている場合は、存在している
- * 最も近い祖先ディレクトリまで遡ってフォーカスする。
+ * - 削除された変更 (DELETED): 削除されたファイルが元々存在していたディレクトリを
+ *   「プロジェクト」ビューでフォーカスする。メニュー表示は
+ *   "Reveal Deleted File Location"。
+ * - 移動された変更 (MOVED): 移動前に存在していたディレクトリをフォーカスする。
+ *   メニュー表示は "Reveal Pre-Move Location"。
+ *
+ * 対象のディレクトリ自体も既に存在しない場合は、存在している最も近い祖先ディレクトリ
+ * まで遡ってフォーカスする。
  */
 class RevealDeletedFileLocationAction : AnAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
 
     override fun update(e: AnActionEvent) {
-        e.presentation.isEnabledAndVisible = e.project != null && getTargetDeletedChange(e) != null
+        val change = getTargetChange(e)
+        e.presentation.isEnabledAndVisible = e.project != null && change != null
+        // Presentation はキャッシュされ得るため、毎回明示的にテキストを設定する。
+        e.presentation.text = when (change?.type) {
+            Change.Type.MOVED -> "Reveal Pre-Move Location"
+            else -> "Reveal Deleted File Location"
+        }
     }
 
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
-        val change = getTargetDeletedChange(e) ?: return
-        val deletedFilePath = change.beforeRevision?.file ?: return
+        val change = getTargetChange(e) ?: return
+        val sourceFilePath = change.beforeRevision?.file ?: return
 
-        val targetDir = findNearestExistingDirectory(deletedFilePath.parentPath) ?: return
+        val targetDir = findNearestExistingDirectory(sourceFilePath.parentPath) ?: return
 
         // 「プロジェクト」ツールウィンドウが閉じている場合でも開いて選択できるように、
         // まずツールウィンドウを activate してから select を呼ぶ。
@@ -47,14 +58,17 @@ class RevealDeletedFileLocationAction : AnAction() {
     }
 
     /**
-     * 選択中の Change がちょうど 1 件で、それが削除された変更であればそれを返す。
-     * そうでなければ null を返す(= アクションを非表示にする)。
+     * 選択中の Change がちょうど 1 件で、それが削除(DELETED)または移動(MOVED)の
+     * 変更であればそれを返す。そうでなければ null を返す(= アクションを非表示にする)。
      */
-    private fun getTargetDeletedChange(e: AnActionEvent): Change? {
+    private fun getTargetChange(e: AnActionEvent): Change? {
         val changes = e.getData(VcsDataKeys.CHANGES) ?: return null
         if (changes.size != 1) return null
         val change = changes[0]
-        return if (change.type == Change.Type.DELETED) change else null
+        return when (change.type) {
+            Change.Type.DELETED, Change.Type.MOVED -> change
+            else -> null
+        }
     }
 
     /**
