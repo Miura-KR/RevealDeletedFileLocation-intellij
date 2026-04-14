@@ -11,19 +11,6 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowId
 import com.intellij.openapi.wm.ToolWindowManager
 
-/**
- * 「コミット」ツールウィンドウや Git Log の変更ファイル一覧で、削除または移動された
- * ファイルを右クリックしたときに表示されるアクション。
- *
- * - 削除された変更 (DELETED): 削除されたファイルが元々存在していたディレクトリを
- *   「プロジェクト」ビューでフォーカスする。メニュー表示は
- *   "Reveal Deleted File Location"。
- * - 移動された変更 (MOVED): 移動前に存在していたディレクトリをフォーカスする。
- *   メニュー表示は "Reveal Pre-Move Location"。
- *
- * 対象のディレクトリ自体も既に存在しない場合は、存在している最も近い祖先ディレクトリ
- * まで遡ってフォーカスする。
- */
 class RevealDeletedFileLocationAction : AnAction() {
 
     override fun getActionUpdateThread(): ActionUpdateThread = ActionUpdateThread.BGT
