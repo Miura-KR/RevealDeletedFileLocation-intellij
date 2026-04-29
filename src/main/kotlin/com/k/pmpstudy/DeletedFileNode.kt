@@ -1,6 +1,8 @@
 package com.k.pmpstudy
 
 import com.intellij.ide.projectView.PresentationData
+import com.intellij.ide.projectView.ProjectViewNode
+import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.fileTypes.FileTypeManager
@@ -15,11 +17,14 @@ import com.intellij.ui.SimpleTextAttributes
 class DeletedFileNode(
     project: Project,
     private val filePath: FilePath,
-    private val change: Change,
+    val change: Change,
     private val attachedDir: VirtualFile,
-) : AbstractTreeNode<FilePath>(project, filePath) {
+    settings: ViewSettings,
+) : ProjectViewNode<FilePath>(project, filePath, settings) {
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> = emptyList()
+
+    override fun contains(file: VirtualFile): Boolean = false
 
     override fun update(presentation: PresentationData) {
         val displayText = computeDisplayText()

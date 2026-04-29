@@ -37,7 +37,9 @@
         </ul>
         The two toggles are independent. Phantom entries can be opened (Enter or double-click)
         to view the deleted/pre-move file content as a read-only editor, just like opening a
-        deleted file from the Git tool window.
+        deleted file from the Git tool window. Right-clicking a phantom entry offers a
+        <b>Rollback</b> action that restores the file (or undoes the move) via the standard
+        IDE rollback dialog.
 
 <br>
 <br>
@@ -65,7 +67,8 @@
         </ul>
         2 つのトグルは独立に切り替えられます。擬似エントリは Enter キーまたはダブルクリックで開くことができ、
         Git ツールウィンドウから削除ファイルを開いたときと同様に、削除前 / 移動前のファイル内容が
-        読み取り専用エディタで表示されます。
+        読み取り専用エディタで表示されます。擬似エントリを右クリックすると <b>Rollback</b> メニューが表示され、
+        IDE 標準のロールバック確認ダイアログを通じて、削除されたファイルを復元したり、移動を元に戻したりできます。
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -100,6 +103,14 @@
                     description="Show locally moved or renamed files in the Project view at their pre-move location."/>
             <add-to-group group-id="ProjectView.ToolWindow.SecondaryActions" anchor="last"/>
         </group>
+
+        <action id="com.k.pmpstudy.RollbackDeletedFileAction"
+                class="com.k.pmpstudy.RollbackDeletedFileAction"
+                text="Rollback"
+                description="Restore the selected locally deleted or moved file (rollback the local change).">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt Z"/>
+        </action>
     </actions>
 
 </idea-plugin>

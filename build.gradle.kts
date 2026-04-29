@@ -48,6 +48,8 @@ intellijPlatform {
                   their pre-move location. The two toggles are independent and both ON by default.</li>
               <li>Phantom entries can be opened (Enter or double-click) to view the deleted /
                   pre-move file content as a read-only editor.</li>
+              <li>Right-clicking a phantom entry now offers a <b>Rollback</b> action that
+                  restores the deleted file or undoes the move via the standard IDE rollback dialog.</li>
               <li>If the original parent directory no longer exists, phantom entries are attached
                   to the nearest existing ancestor and the original sub-path is shown.</li>
             </ul>

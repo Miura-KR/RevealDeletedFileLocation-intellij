@@ -3,9 +3,11 @@ package com.k.pmpstudy
 import com.intellij.ide.projectView.TreeStructureProvider
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
+import com.intellij.openapi.actionSystem.DataSink
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vcs.FilePath
 import com.intellij.openapi.vcs.ProjectLevelVcsManager
+import com.intellij.openapi.vcs.VcsDataKeys
 import com.intellij.openapi.vcs.changes.Change
 import com.intellij.openapi.vcs.changes.ChangeListManager
 import com.intellij.openapi.vfs.VirtualFile
@@ -26,7 +28,7 @@ class DeletedFileTreeStructureProvider : TreeStructureProvider {
         if (!s.showDeleted && !s.showMoved) return children
         if (!ProjectLevelVcsManager.getInstance(project).hasActiveVcss()) return children
 
-        val phantoms = collectPhantomsForDirectory(project, parentDir, s)
+        val phantoms = collectPhantomsForDirectory(project, parentDir, s, settings)
         if (phantoms.isNotEmpty()) {
             children.addAll(phantoms)
         }
@@ -37,6 +39,7 @@ class DeletedFileTreeStructureProvider : TreeStructureProvider {
         project: Project,
         parentDir: VirtualFile,
         settings: RevealDeletedFilesSettings,
+        viewSettings: ViewSettings,
     ): List<DeletedFileNode> {
         val results = mutableListOf<DeletedFileNode>()
         val seenPaths = HashSet<String>()
@@ -51,11 +54,22 @@ class DeletedFileTreeStructureProvider : TreeStructureProvider {
             val before = change.beforeRevision?.file ?: continue
             val phantomParent = before.parentPath ?: continue
             val nearestExisting = findNearestExistingDirectory(phantomParent) ?: continue
-            if (!nearestExisting.equals(parentDir)) continue
+            if (nearestExisting != parentDir) continue
             if (!seenPaths.add(before.path)) continue
-            results.add(DeletedFileNode(project, before, change, parentDir))
+            results.add(DeletedFileNode(project, before, change, parentDir, viewSettings))
         }
         return results
+    }
+
+    override fun uiDataSnapshot(
+        sink: DataSink,
+        selection: Collection<AbstractTreeNode<*>>,
+    ) {
+        if (selection.isEmpty()) return
+        if (selection.any { it !is DeletedFileNode }) return
+        val deletedNodes = selection.filterIsInstance<DeletedFileNode>()
+        if (deletedNodes.isEmpty()) return
+        sink[VcsDataKeys.CHANGES] = deletedNodes.map { it.change }.toTypedArray()
     }
 
     private fun findNearestExistingDirectory(start: FilePath): VirtualFile? {
