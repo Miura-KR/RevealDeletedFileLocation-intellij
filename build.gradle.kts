@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.k.pmpstudy"
-version = "1.1.0"
+version = "1.2.0"
 
 // Set the JVM language level used to build the project.
 kotlin {
@@ -27,6 +27,7 @@ dependencies {
 
         // Add plugin dependencies for compilation here, for example:
         // bundledPlugin("com.intellij.java")
+        bundledModule("intellij.platform.vcs.impl")
 
     }
 }
@@ -40,11 +41,15 @@ intellijPlatform {
         changeNotes = """
             <h3>${project.version}</h3>
             <ul>
-              <li>Added support for moved / renamed files: right-clicking a moved entry now shows
-                  <b>Reveal Pre-Move Location</b>, which focuses the directory the file was in
-                  before the move.</li>
-              <li>The action is now also available in the <b>Git</b> tool window's per-commit
-                  changed files list (in addition to the Commit tool window).</li>
+              <li>Added <b>Show Deleted Files</b> and <b>Show Moved Files (Pre-Move Location)</b>
+                  toggles in the Project view tool window's options menu (the ⋮ three-dot button,
+                  under <b>Reveal Deleted Files</b>). Locally deleted files appear with strikethrough
+                  text at their original location; moved / renamed files appear with italic text at
+                  their pre-move location. The two toggles are independent and both ON by default.</li>
+              <li>Phantom entries can be opened (Enter or double-click) to view the deleted /
+                  pre-move file content as a read-only editor.</li>
+              <li>If the original parent directory no longer exists, phantom entries are attached
+                  to the nearest existing ancestor and the original sub-path is shown.</li>
             </ul>
         """.trimIndent()
     }

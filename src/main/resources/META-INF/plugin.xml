@@ -13,8 +13,10 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        Adds context menu actions to the <b>Commit</b> tool window and the <b>Git</b> tool window's
-        per-commit changed files list, for files that were deleted or moved:<br>
+        Helps you navigate to and inspect locally deleted or moved files in the <b>Project</b> view.<br>
+        <br>
+        <b>Context menu actions</b> in the <b>Commit</b> tool window and the <b>Git</b> tool window's
+        per-commit changed files list:
         <ul>
           <li><b>Reveal Deleted File Location</b> — shown on a deleted file. Focuses the directory
               where the file used to be in the Project view.</li>
@@ -22,13 +24,27 @@
               directory the file was in <i>before</i> the move.</li>
         </ul>
         If the target directory itself no longer exists, the plugin walks up to the nearest
-        existing ancestor directory.
+        existing ancestor directory.<br>
+        <br>
+        <b>Project view phantom entries</b> — open the Project view tool window's
+        options menu (the <b>⋮</b> three-dot button on the toolbar) and use the
+        <b>Reveal Deleted Files</b> submenu to toggle:
+        <ul>
+          <li><b>Show Deleted Files</b> — locally deleted files appear at their original location
+              with strikethrough text. (Default: ON)</li>
+          <li><b>Show Moved Files (Pre-Move Location)</b> — locally moved / renamed files appear
+              at their pre-move location with italic text. (Default: ON)</li>
+        </ul>
+        The two toggles are independent. Phantom entries can be opened (Enter or double-click)
+        to view the deleted/pre-move file content as a read-only editor, just like opening a
+        deleted file from the Git tool window.
 
 <br>
 <br>
 
-        「コミット」ツールウィンドウ、および「Git」ツールウィンドウのコミットごとの変更ファイル一覧で、
-        削除 / 移動されたファイルを右クリックしたときに以下のメニューを追加します。<br>
+        ローカルで削除 / 移動されたファイルを「プロジェクト」ビュー上で確認・参照しやすくします。<br>
+        <br>
+        <b>コンテキストメニュー</b>(「コミット」ツールウィンドウ、および「Git」ツールウィンドウのコミットごとの変更ファイル一覧):
         <ul>
           <li><b>Reveal Deleted File Location</b>(削除ファイル向け): 元々存在していたディレクトリを
               「プロジェクト」ビューでフォーカスします。</li>
@@ -36,12 +52,30 @@
               ディレクトリを「プロジェクト」ビューでフォーカスします。</li>
         </ul>
         対象のディレクトリ自体も既に削除されていた場合は、存在している最も近い祖先ディレクトリまで
-        遡ってフォーカスします。
+        遡ってフォーカスします。<br>
+        <br>
+        <b>プロジェクトビュー上の擬似エントリ表示</b> — 「プロジェクト」ツールウィンドウのツールバー
+        右上にある <b>⋮</b>(3 点リーダー)ボタンから <b>Reveal Deleted Files</b> サブメニューを開いて
+        以下を切り替えできます。
+        <ul>
+          <li><b>Show Deleted Files</b>: ローカルで削除されたファイルを、元あった場所に取り消し線付きで表示します。
+              (デフォルト: ON)</li>
+          <li><b>Show Moved Files (Pre-Move Location)</b>: ローカルで移動 / リネームされたファイルを、
+              移動前の場所に斜体で表示します。(デフォルト: ON)</li>
+        </ul>
+        2 つのトグルは独立に切り替えられます。擬似エントリは Enter キーまたはダブルクリックで開くことができ、
+        Git ツールウィンドウから削除ファイルを開いたときと同様に、削除前 / 移動前のファイル内容が
+        読み取り専用エディタで表示されます。
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <treeStructureProvider implementation="com.k.pmpstudy.DeletedFileTreeStructureProvider"/>
+        <postStartupActivity implementation="com.k.pmpstudy.RevealDeletedFilesProjectActivity"/>
+    </extensions>
 
     <actions>
         <action id="com.k.pmpstudy.RevealDeletedFileLocationAction"
@@ -51,6 +85,21 @@
             <add-to-group group-id="ChangesViewPopupMenu" anchor="after" relative-to-action="ChangesView.EditSource"/>
             <add-to-group group-id="Vcs.RepositoryChangesBrowserMenu" anchor="after" relative-to-action="Vcs.OpenRepositoryVersion"/>
         </action>
+
+        <group id="com.k.pmpstudy.RevealDeletedFiles.OptionsGroup"
+               text="Reveal Deleted Files"
+               popup="true"
+               description="Show locally deleted or moved files in the Project view.">
+            <action id="com.k.pmpstudy.ToggleShowDeletedFilesAction"
+                    class="com.k.pmpstudy.ToggleShowDeletedFilesAction"
+                    text="Show Deleted Files"
+                    description="Show locally deleted files in the Project view at their original location."/>
+            <action id="com.k.pmpstudy.ToggleShowMovedFilesAction"
+                    class="com.k.pmpstudy.ToggleShowMovedFilesAction"
+                    text="Show Moved Files (Pre-Move Location)"
+                    description="Show locally moved or renamed files in the Project view at their pre-move location."/>
+            <add-to-group group-id="ProjectView.ToolWindow.SecondaryActions" anchor="last"/>
+        </group>
     </actions>
 
 </idea-plugin>
